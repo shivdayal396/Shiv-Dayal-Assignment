@@ -1,0 +1,23 @@
+9 Write your observations in a text file.
+After deleting vote pod the pod name for vote-FE changes and has no effect on result-FE. We can see the new pod name and IP for vote in unix.
+
+After deleting the worker pod there is no effect on both FE. We can see the new pod name and IP for worker in Unix but lost the logs that we have.
+
+10. what happens after db pod deletion?
+After deleting the DB pod we see that data is lost in the Result FE but there is no impact on the Vote FE. 
+In Unix we see that the containers of worker and result pods are restarted
+
+11. complete the assignment by making the result pod work. (if it is not working)
+its working
+
+13. your comment on WHY result app STOPPED working after db pod stop
+because worker app collecting the data from radis and push into the db with trying to connect to the db and keep trying untill successed. and when it trying to reconnect
+it will do restart.
+
+When we delete the DB, in that case it does not reconnect to the result-pod. 
+So result-pod is restarted by program to reconnect to DB (where restart is 1) otherwise we need to restart the result pod manually to connect to DB pod (if restart is 0). 
+If we don't do that, FE will show it is not connected.
+
+14. your answer to HOW YOU MADE THE RESULT POD work.
+The pod comes UP without any intervention
+
