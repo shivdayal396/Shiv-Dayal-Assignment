@@ -1,0 +1,245 @@
+9 Write your observations in a text file.
+After deleting vote pod the pod name for vote-FE changes and has no effect on result-FE. We can see the new pod name and IP for vote in unix.
+
+After deleting the worker pod there is no effect on both FE. We can see the new pod name and IP for worker in Unix but lost the logs that we have.
+
+10. what happens after db pod deletion?
+After deleting the DB pod we see that data is lost in the Result FE but there is no impact on the Vote FE. 
+In Unix we see that the containers of worker and result pods are restarted
+
+11. complete the assignment by making the result pod work. (if it is not working)
+its working
+
+13. your comment on WHY result app STOPPED working after db pod stop
+because worker app collecting the data from radis and push into the db with trying to connect to the db and keep trying untill successed. and when it trying to reconnect
+it will do restart.
+
+When we delete the DB, in that case it does not reconnect to the result-pod. 
+So result-pod is restarted by program to reconnect to DB (where restart is 1) otherwise we need to restart the result pod manually to connect to DB pod (if restart is 0). 
+If we don't do that, FE will show it is not connected.
+
+14. your answer to HOW YOU MADE THE RESULT POD work.
+The pod comes UP without any intervention
+
+
+
+==========================Commands/terminal O/P =======================
+
+root@ip-172-31-33-228:~# kubectl delete all --all
+pod "db-58cc845644-q97fj" deleted
+pod "redis-6878558678-q5tb2" deleted
+pod "result-86bc6f7b5d-6tpj4" deleted
+pod "vote-7d884dd585-qpcr7" deleted
+pod "worker-6fc5d5b668-d6292" deleted
+service "db" deleted
+service "kubernetes" deleted
+service "redis" deleted
+service "result" deleted
+service "vote" deleted
+deployment.apps "db" deleted
+deployment.apps "redis" deleted
+deployment.apps "result" deleted
+deployment.apps "vote" deleted
+deployment.apps "worker" deleted
+
+^Croot@ip-172-31-33-228:~# kubectl delete all
+error: resource(s) were provided, but no name was specified
+root@ip-172-31-33-228:~# kubectl get pod
+NAME                      READY   STATUS        RESTARTS        AGE
+db-58cc845644-bhrxr       0/1     Terminating   0               14s
+db-58cc845644-q97fj       1/1     Terminating   0               2d16h
+redis-6878558678-q5tb2    1/1     Terminating   0               4d14h
+redis-6878558678-xddk9    0/1     Terminating   0               14s
+result-86bc6f7b5d-6tpj4   1/1     Terminating   2 (2d16h ago)   4d14h
+result-86bc6f7b5d-c7ctg   0/1     Terminating   0               14s
+vote-7d884dd585-mdfpm     0/1     Terminating   0               14s
+vote-7d884dd585-qpcr7     1/1     Terminating   0               2d16h
+worker-6fc5d5b668-d6292   1/1     Terminating   2 (2d16h ago)   2d16h
+worker-6fc5d5b668-qnvvz   0/1     Terminating   0               14s
+root@ip-172-31-33-228:~# kubectl get pod
+NAME                      READY   STATUS        RESTARTS        AGE
+db-58cc845644-bhrxr       0/1     Terminating   0               29s
+db-58cc845644-q97fj       1/1     Terminating   0               2d16h
+redis-6878558678-q5tb2    1/1     Terminating   0               4d14h
+redis-6878558678-xddk9    0/1     Terminating   0               29s
+result-86bc6f7b5d-6tpj4   1/1     Terminating   2 (2d16h ago)   4d14h
+result-86bc6f7b5d-c7ctg   0/1     Terminating   0               29s
+vote-7d884dd585-mdfpm     0/1     Terminating   0               29s
+vote-7d884dd585-qpcr7     1/1     Terminating   0               2d16h
+worker-6fc5d5b668-d6292   1/1     Terminating   2 (2d16h ago)   2d16h
+worker-6fc5d5b668-qnvvz   0/1     Terminating   0               29s
+root@ip-172-31-33-228:~# kubectl get pod
+NAME                      READY   STATUS        RESTARTS        AGE
+db-58cc845644-bhrxr       0/1     Terminating   0               30s
+db-58cc845644-q97fj       1/1     Terminating   0               2d16h
+redis-6878558678-q5tb2    1/1     Terminating   0               4d14h
+redis-6878558678-xddk9    0/1     Terminating   0               30s
+result-86bc6f7b5d-6tpj4   1/1     Terminating   2 (2d16h ago)   4d14h
+result-86bc6f7b5d-c7ctg   0/1     Terminating   0               30s
+vote-7d884dd585-mdfpm     0/1     Terminating   0               30s
+vote-7d884dd585-qpcr7     1/1     Terminating   0               2d16h
+worker-6fc5d5b668-d6292   1/1     Terminating   2 (2d16h ago)   2d16h
+worker-6fc5d5b668-qnvvz   0/1     Terminating   0               30s
+root@ip-172-31-33-228:~# kubectl get pod
+NAME                      READY   STATUS        RESTARTS        AGE
+db-58cc845644-bhrxr       0/1     Terminating   0               32s
+db-58cc845644-q97fj       1/1     Terminating   0               2d16h
+redis-6878558678-q5tb2    0/1     Terminating   0               4d14h
+redis-6878558678-xddk9    0/1     Terminating   0               32s
+result-86bc6f7b5d-6tpj4   1/1     Terminating   2 (2d16h ago)   4d14h
+result-86bc6f7b5d-c7ctg   0/1     Terminating   0               32s
+vote-7d884dd585-mdfpm     0/1     Terminating   0               32s
+vote-7d884dd585-qpcr7     1/1     Terminating   0               2d16h
+worker-6fc5d5b668-d6292   1/1     Terminating   2 (2d16h ago)   2d16h
+worker-6fc5d5b668-qnvvz   0/1     Terminating   0               32s
+root@ip-172-31-33-228:~# kubectl get pod
+NAME                      READY   STATUS        RESTARTS   AGE
+db-58cc845644-q97fj       0/1     Terminating   0          2d16h
+redis-6878558678-xddk9    0/1     Terminating   0          33s
+result-86bc6f7b5d-6tpj4   0/1     Terminating   2          4d14h
+vote-7d884dd585-mdfpm     0/1     Terminating   0          33s
+vote-7d884dd585-qpcr7     0/1     Terminating   0          2d16h
+worker-6fc5d5b668-d6292   0/1     Terminating   2          2d16h
+worker-6fc5d5b668-qnvvz   0/1     Terminating   0          33s
+root@ip-172-31-33-228:~# kubectl get pod
+NAME                  READY   STATUS        RESTARTS   AGE
+db-58cc845644-q97fj   0/1     Terminating   0          2d16h
+root@ip-172-31-33-228:~# kubectl get pod
+No resources found in default namespace.
+root@ip-172-31-33-228:~# kubectl get pod
+No resources found in default namespace.
+root@ip-172-31-33-228:~#
+root@ip-172-31-33-228:~#
+root@ip-172-31-33-228:~# ll
+total 72
+drwx------  8 root root  4096 Oct 24 17:15 ./
+drwxr-xr-x 19 root root  4096 Oct 18 05:27 ../
+-rw-------  1 root root  5052 Oct 28 15:03 .bash_history
+-rw-r--r--  1 root root  3151 Oct 18 07:28 .bashrc
+drwxr-x---  3 root root  4096 Oct 21 04:37 .kube/
+-rw-------  1 root root    20 Oct 18 08:43 .lesshst
+-rw-r--r--  1 root root   161 Jul  9  2019 .profile
+drwx------  2 root root  4096 Oct 18 05:27 .ssh/
+drwxr-xr-x  2 root root  4096 Oct 24 17:13 .vim/
+-rw-------  1 root root 13990 Oct 24 17:15 .viminfo
+drwxr-xr-x  8 root root  4096 Oct 24 17:15 example-voting-app/
+drwxr-xr-x 20 root root  4096 Oct 21 03:13 kubernetes-training/
+drwx------  4 root root  4096 Oct 24 16:38 snap/
+-rw-r--r--  1 root root   177 Oct 18 07:31 token.txt
+root@ip-172-31-33-228:~# cd example-voting-app/
+root@ip-172-31-33-228:~/example-voting-app# ll
+total 132
+drwxr-xr-x 8 root root  4096 Oct 24 17:15 ./
+drwx------ 8 root root  4096 Oct 24 17:15 ../
+drwxr-xr-x 8 root root  4096 Oct 24 16:43 .git/
+drwxr-xr-x 2 root root  4096 Oct 24 16:43 .github/
+-rw-r--r-- 1 root root    33 Oct 24 16:43 .gitignore
+-rw-r--r-- 1 root root 10758 Oct 24 16:43 LICENSE
+-rw-r--r-- 1 root root   185 Oct 24 16:43 MAINTAINERS
+-rw-r--r-- 1 root root  2182 Oct 24 16:43 README.md
+-rw-r--r-- 1 root root 54824 Oct 24 16:43 architecture.png
+-rw-r--r-- 1 root root   808 Oct 24 16:43 docker-compose-javaworker.yml
+-rw-r--r-- 1 root root   400 Oct 24 16:43 docker-compose-simple.yml
+-rw-r--r-- 1 root root   808 Oct 24 16:43 docker-compose.yml
+-rw-r--r-- 1 root root  1692 Oct 24 16:43 docker-stack.yml
+-rw-r--r-- 1 root root   609 Oct 24 16:43 dockercloud.yml
+drwxr-xr-x 2 root root  4096 Oct 24 17:06 k8s-specifications/
+drwxr-xr-x 5 root root  4096 Oct 24 16:43 result/
+drwxr-xr-x 4 root root  4096 Oct 24 17:14 vote/
+drwxr-xr-x 3 root root  4096 Oct 24 16:43 worker/
+root@ip-172-31-33-228:~/example-voting-app# cd k8s-specifications/
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications# ll
+total 44
+drwxr-xr-x 2 root root 4096 Oct 24 17:06 ./
+drwxr-xr-x 8 root root 4096 Oct 24 17:15 ../
+-rw-r--r-- 1 root root  401 Oct 24 16:43 db-deployment.yaml
+-rw-r--r-- 1 root root  146 Oct 24 16:43 db-service.yaml
+-rw-r--r-- 1 root root  402 Oct 24 16:43 redis-deployment.yaml
+-rw-r--r-- 1 root root  152 Oct 24 16:43 redis-service.yaml
+-rw-r--r-- 1 root root  299 Oct 24 16:43 result-deployment.yaml
+-rw-r--r-- 1 root root  195 Oct 24 16:43 result-service.yaml
+-rw-r--r-- 1 root root  289 Oct 24 16:43 vote-deployment.yaml
+-rw-r--r-- 1 root root  192 Oct 24 16:43 vote-service.yaml
+-rw-r--r-- 1 root root  292 Oct 24 16:43 worker-deployment.yaml
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications# kubectl apply -f .
+deployment.apps/db created
+service/db created
+deployment.apps/redis created
+service/redis created
+deployment.apps/result created
+service/result created
+deployment.apps/vote created
+service/vote created
+deployment.apps/worker created
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications#
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications#
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-58cc845644-cdjfn       1/1     Running   0          6s
+redis-6878558678-5wzdx    1/1     Running   0          6s
+result-86bc6f7b5d-hgwqm   1/1     Running   0          6s
+vote-7d884dd585-56hk9     1/1     Running   0          6s
+worker-6fc5d5b668-j6872   1/1     Running   0          6s
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications# kubectl get all
+NAME                          READY   STATUS    RESTARTS   AGE
+pod/db-58cc845644-cdjfn       1/1     Running   0          2m8s
+pod/redis-6878558678-5wzdx    1/1     Running   0          2m8s
+pod/result-86bc6f7b5d-hgwqm   1/1     Running   0          2m8s
+pod/vote-7d884dd585-56hk9     1/1     Running   0          2m8s
+pod/worker-6fc5d5b668-j6872   1/1     Running   0          2m8s
+
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/db           ClusterIP   10.109.223.179   <none>        5432/TCP         2m8s
+service/kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          3m4s
+service/redis        ClusterIP   10.111.64.216    <none>        6379/TCP         2m8s
+service/result       NodePort    10.96.142.106    <none>        5001:31001/TCP   2m8s
+service/vote         NodePort    10.105.225.134   <none>        5000:31000/TCP   2m8s
+
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/db       1/1     1            1           2m8s
+deployment.apps/redis    1/1     1            1           2m8s
+deployment.apps/result   1/1     1            1           2m8s
+deployment.apps/vote     1/1     1            1           2m8s
+deployment.apps/worker   1/1     1            1           2m8s
+
+NAME                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/db-58cc845644       1         1         1       2m8s
+replicaset.apps/redis-6878558678    1         1         1       2m8s
+replicaset.apps/result-86bc6f7b5d   1         1         1       2m8s
+replicaset.apps/vote-7d884dd585     1         1         1       2m8s
+replicaset.apps/worker-6fc5d5b668   1         1         1       2m8s
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-58cc845644-cdjfn       1/1     Running   0          2m30s
+redis-6878558678-5wzdx    1/1     Running   0          2m30s
+result-86bc6f7b5d-hgwqm   1/1     Running   0          2m30s
+vote-7d884dd585-56hk9     1/1     Running   0          2m30s
+worker-6fc5d5b668-j6872   1/1     Running   0          2m30s
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications# kubectl delete pod vote-7d884dd585-56hk9
+pod "vote-7d884dd585-56hk9" deleted
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-58cc845644-cdjfn       1/1     Running   0          2m46s
+redis-6878558678-5wzdx    1/1     Running   0          2m46s
+result-86bc6f7b5d-hgwqm   1/1     Running   0          2m46s
+vote-7d884dd585-wpl5n     1/1     Running   0          4s
+worker-6fc5d5b668-j6872   1/1     Running   0          2m46s
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications# kubectl delete pod worker-6fc5d5b668-j6872
+pod "worker-6fc5d5b668-j6872" deleted
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-58cc845644-cdjfn       1/1     Running   0          3m14s
+redis-6878558678-5wzdx    1/1     Running   0          3m14s
+result-86bc6f7b5d-hgwqm   1/1     Running   0          3m14s
+vote-7d884dd585-wpl5n     1/1     Running   0          32s
+worker-6fc5d5b668-wc2jk   1/1     Running   0          11s
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications# kubectl delete pod db-58cc845644-cdjfn
+pod "db-58cc845644-cdjfn" deleted
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications# kubectl get po
+NAME                      READY   STATUS    RESTARTS     AGE
+db-58cc845644-6p5v5       1/1     Running   0            35s
+redis-6878558678-5wzdx    1/1     Running   0            4m
+result-86bc6f7b5d-hgwqm   1/1     Running   1 (5s ago)   4m
+vote-7d884dd585-wpl5n     1/1     Running   0            78s
+worker-6fc5d5b668-wc2jk   1/1     Running   1 (5s ago)   57s
+root@ip-172-31-33-228:~/example-voting-app/k8s-specifications#
